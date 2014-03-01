@@ -1,0 +1,12 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.urqa.android">
+
+    <uses-sdk android:minSdkVersion="8"/>
+
+
+    <application>
+        <activity android:name=".tests.activity.UrQAActivity"/>
+        </application>
+
+
+</manifest>
