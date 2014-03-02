@@ -2,11 +2,7 @@
           package="com.urqa.android">
 
     <uses-sdk android:minSdkVersion="8"/>
-
-
-    <application>
-        <activity android:name=".tests.activity.UrQAActivity"/>
-        </application>
+    <application />
 
 
 </manifest>

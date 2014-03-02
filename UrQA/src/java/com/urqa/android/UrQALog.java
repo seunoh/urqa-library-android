@@ -7,9 +7,8 @@ import com.urqa.android.common.AndroidData;
 import com.urqa.android.common.AppData;
 import com.urqa.android.common.CallStackData;
 import com.urqa.android.common.DisplayData;
-import com.urqa.android.common.ErrorReport;
 import com.urqa.android.common.MemoryData;
-import com.urqa.android.net.AndroidDataRequest;
+import com.urqa.android.net.ErrorRequest;
 import com.urqa.android.net.HttpRunnable;
 import com.urqa.android.net.Response;
 import com.urqa.android.net.SendErrorProcess;
@@ -119,7 +118,6 @@ public final class UrQALog {
 
 
     private static void requestSendException(Context context, Exception e, String tag, ErrorLevel level) {
-        ErrorReport report = ErrorReportFactory.create(context, e, tag, level);
         AndroidData androidData = ErrorReportFactory.createAndroidData(tag, level);
         AppData appData = ErrorReportFactory.createAppData(context);
         CallStackData callStackData = ErrorReportFactory.createCallStack(e);
@@ -127,7 +125,7 @@ public final class UrQALog {
         MemoryData memoryData = ErrorReportFactory.createMemoryData(context);
 
 
-        AndroidDataRequest request = new AndroidDataRequest(new Response.ResponseListener() {
+        ErrorRequest request = new ErrorRequest(new Response.ResponseListener() {
             @Override
             public void response(JSONObject response) {
                 Log.e(TAG + 2, response.toString());
@@ -168,19 +166,19 @@ public final class UrQALog {
             if (auth != null && !"".equals(auth))
                 request.addParams(new JSONObject(auth));
 
-            request.addParams(androidData.toJson());
-            request.addParams(appData.toJson());
-            request.addParams(callStackData.toJson());
-            request.addParams(displayData.toJson());
-            request.addParams(memoryData.toJson());
-            request.addParams(androidData.toJson());
+            request.setAndroidData(androidData);
+            request.setAppData(appData);
+            request.setCallStackData(callStackData);
+            request.setDisplayData(displayData);
+            request.setMemoryData(memoryData);
         } catch (JSONException e1) {
             e1.printStackTrace();
         }
 
         HttpRunnable.start(request);
 
-        SendErrorProcess errorProcess = new SendErrorProcess(report);
+
+        SendErrorProcess errorProcess = new SendErrorProcess(null, null);
         //errorProcess.start();
     }
 

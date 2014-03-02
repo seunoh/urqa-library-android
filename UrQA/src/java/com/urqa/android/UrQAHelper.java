@@ -4,8 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 
-import com.urqa.android.common.ExceptionHandler;
-
 import java.net.SocketException;
 import java.util.HashMap;
 
@@ -18,7 +16,7 @@ public final class UrQAHelper extends HashMap<UrQAHelper.Keys, String> {
 
     private static volatile UrQAHelper sInstance;
 
-    private Context mContext;
+    private static Context sContext;
     private boolean mToggleLogCat;
     private int mLogLine;
     private boolean mTransferLog;
@@ -29,7 +27,7 @@ public final class UrQAHelper extends HashMap<UrQAHelper.Keys, String> {
 
 
     public static void init(Context context) {
-        getInstance().mContext = context;
+        UrQAHelper.sContext = context;
         getInstance().mTwice = true;
     }
 
@@ -41,12 +39,11 @@ public final class UrQAHelper extends HashMap<UrQAHelper.Keys, String> {
     }
 
 
-
-    public Context getContext() {
-        if (mContext == null)
+    public static Context getContext() {
+        if (sContext == null)
             throw new IllegalArgumentException("called method UrQA.newSession()");
 
-        return mContext;
+        return sContext;
     }
 
     public boolean isTwice() {

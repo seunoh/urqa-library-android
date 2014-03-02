@@ -11,13 +11,14 @@ android {
         versionName '1.0'
     }
 
-
     sourceSets {
         main {
             manifest.srcFile 'src/AndroidManifest.xml'
             java.srcDirs = ['src/java']
             res.srcDirs = ['src/res']
-            assets.srcDirs = ['src/main/assets']
+            assets.srcDirs = ['src/assets']
+            jniLibs.srcDirs = ['jniDir']
+
 
         }
     }

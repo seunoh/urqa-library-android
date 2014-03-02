@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by seunoh on 2014. 1. 26..
+ * @author seunoh on 2014. 1. 26..
  */
 public class HttpProcess {
 

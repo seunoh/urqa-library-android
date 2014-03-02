@@ -3,13 +3,15 @@ package com.urqa.android.net;
 import android.os.Handler;
 import android.os.Looper;
 
+import java.util.Queue;
+
 /**
- * Created by seunoh on 2014. 1. 26..
+ * @author seunoh on 2014. 1. 26..
  */
 public final class HttpRunnable {
 
+    public static final String THREAD_NAME = "UrQA-Android-Http";
 
-    public static final String THREAD_NAME = "UrQA-Http";
 
     private static int INDEX = 0;
 

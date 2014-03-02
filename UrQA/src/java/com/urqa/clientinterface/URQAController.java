@@ -15,17 +15,17 @@ public final class URQAController {
 
 
     /**
-     * @deprecated Use {@link com.urqa.android.UrQA#leaveBreadcrumb()} instead.
+     * @deprecated Use {@link com.urqa.android.UrQA#leaveBreadCrumb()} instead.
      */
     public static void leaveBreadcrumb() {
-        UrQA.leaveBreadcrumb();
+        UrQA.leaveBreadCrumb();
     }
 
     /**
-     * @deprecated Use {@link com.urqa.android.UrQA#leaveBreadcrumb(String)} instead.
+     * @deprecated Use {@link com.urqa.android.UrQA#leaveBreadCrumb(String)} instead.
      */
     public static void leaveBreadcrumb(String tag) {
-        UrQA.leaveBreadcrumb(tag);
+        UrQA.leaveBreadCrumb(tag);
     }
 
 

@@ -34,7 +34,6 @@ public class Request {
     private static final int TIMEOUT_MS = 5000;
     private final int mMethod;
     private final String mUrl;
-    private Object mTag;
     private Map<String, String> mHeader;
     private Map<String, String> mParams;
     private Response.ResponseListener mListener;
@@ -54,13 +53,6 @@ public class Request {
      */
     public int getMethod() {
         return mMethod;
-    }
-
-    /**
-     * Set a tag on this request.
-     */
-    public void setTag(Object tag) {
-        mTag = tag;
     }
 
     /**
@@ -144,6 +136,7 @@ public class Request {
                 throw new IllegalArgumentException("Parameter empty");
             }
         } catch (Exception e) {
+            fail(e);
             return null;
         }
 

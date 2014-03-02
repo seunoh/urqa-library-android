@@ -5,15 +5,13 @@ import android.util.Log;
 
 import com.urqa.android.collector.AppManager;
 import com.urqa.android.common.Auth;
-import com.urqa.android.common.ErrorReport;
 import com.urqa.android.common.ExceptionHandler;
 import com.urqa.android.eventpath.EventPathManager;
+import com.urqa.android.net.ErrorNativeRequest;
 import com.urqa.android.net.HttpRunnable;
 import com.urqa.android.net.Request;
 import com.urqa.android.net.Response;
-import com.urqa.android.net.SendErrorProcessURLConnection;
 import com.urqa.android.net.UrQAUrlFactory;
-import com.urqa.android.report.ErrorReportFactory;
 
 import org.json.JSONObject;
 
@@ -76,22 +74,24 @@ public final class UrQA {
     }
 
 
-    public synchronized static void leaveBreadcrumb() {
+    public synchronized static void leaveBreadCrumb() {
         EventPathManager.getInstance().create(2, "");
     }
 
-    public synchronized static void leaveBreadcrumb(String tag) {
+    public synchronized static void leaveBreadCrumb(String tag) {
         EventPathManager.getInstance().create(2, tag);
     }
 
     public static void nativeCrashCallback(String str) {
-        ErrorReport report = ErrorReportFactory.createNative(UrQAHelper.getInstance().getContext());
 
-        SendErrorProcessURLConnection errorProcess = new SendErrorProcessURLConnection(report, str);
-        errorProcess.start();
+        // TODO errorNativeRequest
+        //ErrorReport report = ErrorReportFactory.createNative(UrQAHelper.getInstance().getContext());
+
+        ErrorNativeRequest errorNativeRequest = new ErrorNativeRequest(str);
+        errorNativeRequest.start();
 
         try {
-            errorProcess.join();
+            errorNativeRequest.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

@@ -11,23 +11,10 @@ import com.urqa.android.common.AndroidData;
 import com.urqa.android.common.AppData;
 import com.urqa.android.common.CallStackData;
 import com.urqa.android.common.DisplayData;
-import com.urqa.android.common.ErrorReport;
 import com.urqa.android.common.MemoryData;
 import com.urqa.android.rank.ErrorLevel;
 
 public class ErrorReportFactory {
-
-    public static ErrorReport create(Context context, Throwable throwable, String tag, ErrorLevel level) {
-        ErrorReport report = new ErrorReport();
-        report.setAndroidData(createAndroidData(context, throwable, tag, level));
-        report.setLogData(createLogData(context));
-        return report;
-    }
-
-
-    public static AndroidData createAndroidData(Context context, Throwable throwable, String tag, ErrorLevel level) {
-        return new AndroidData.Builder(tag, level).build();
-    }
 
     public static AndroidData createAndroidData(String tag, ErrorLevel level) {
         return new AndroidData.Builder(tag, level).build();
@@ -54,11 +41,11 @@ public class ErrorReportFactory {
     }
 
 
-    public static ErrorReport createNative(Context context) {
-        //TODO native
-        ErrorReport report = new ErrorReport();
-        //report.setAndroidData(buildAndroidData(context, null, "", ErrorLevel.NATIVE));
-        report.setLogData(LogCollector.getLog(context));
-        return report;
-    }
+//    public static ErrorReport createNative1(Context context) {
+//        //TODO native
+//        ErrorReport report = new ErrorReport();
+//        //report.setAndroidData(buildAndroidData(context, null, "", ErrorLevel.NATIVE));
+//        report.setLogData(LogCollector.getLog(context));
+//        return report;
+//    }
 }

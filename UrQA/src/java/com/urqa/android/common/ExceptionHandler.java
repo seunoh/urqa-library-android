@@ -27,7 +27,14 @@ public class ExceptionHandler implements Thread.UncaughtExceptionHandler {
 
     @Override
     public void uncaughtException(Thread thread, Throwable throwable) {
-        ErrorReport report = ErrorReportFactory.create(UrQAHelper.getInstance().getContext(), throwable, UrQA.TAG, ErrorLevel.UN_HANDLE);
+        //ErrorReport report = ErrorReportFactory.create(UrQAHelper.getInstance().getContext(), throwable, UrQA.TAG, ErrorLevel.UN_HANDLE);
+
+        AndroidData androidData = ErrorReportFactory.createAndroidData(UrQA.TAG, ErrorLevel.UN_HANDLE);
+        AppData appData = ErrorReportFactory.createAppData(UrQAHelper.getInstance().getContext());
+        CallStackData callStackData = ErrorReportFactory.createCallStack(throwable);
+        DisplayData displayData = ErrorReportFactory.createDisplayData(UrQAHelper.getInstance().getContext());
+        MemoryData memoryData = ErrorReportFactory.createMemoryData(UrQAHelper.getInstance().getContext());
+
 
         Request request = new Request(Request.Method.POST, UrQAUrlFactory.create(UrQAUrlFactory.Url.EXCEPTION), new Response.ResponseListener() {
             @Override
