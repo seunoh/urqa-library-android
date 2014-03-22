@@ -1,6 +1,5 @@
 package com.urqa.android.collector;
 
-import android.content.Context;
 import android.util.Log;
 
 import com.urqa.android.UrQAHelper;
@@ -14,11 +13,11 @@ import java.util.List;
 
 public final class LogCollector {
 
-    public static String getLog(Context context) {
+    public static String getLog() {
         try {
             LogCollector collector = new LogCollector();
-            Process logCatProcess = Runtime.getRuntime().exec(collector.commandLogCat());
-            return collector.convertStreamToString(logCatProcess.getInputStream());
+            Process process = Runtime.getRuntime().exec(collector.commandLogCat());
+            return collector.convertStreamToString(process.getInputStream());
         } catch (IOException e) {
             Log.e("LogCollector", e.getMessage(), e);
             return "";
@@ -36,8 +35,8 @@ public final class LogCollector {
 
     private String listToString(List<String> list) {
         final int end = list.size();
-        final int logLine = UrQAHelper.getInstance().getLogLine();
-        final int start = (end - logLine) < 0 ? 0 : (end - logLine);
+        final int line = UrQAHelper.getInstance().getLogLine();
+        final int start = (end - line) < 0 ? 0 : (end - line);
 
         StringBuilder output = new StringBuilder();
         for (int i = start; i < end; i++) {

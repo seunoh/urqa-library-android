@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.urqa.android.UrQA;
 import com.urqa.android.UrQALog;
-import com.urqa.android.rank.ErrorLevel;
+import com.urqa.android.level.ErrorLevel;
 import com.urqa.rank.ErrorRank;
 
 
@@ -46,7 +46,7 @@ public final class URQAController {
 
 
     /**
-     * @deprecated Use {@link com.urqa.android.UrQALog#sendException(Exception, String, com.urqa.android.rank.ErrorLevel)} instead.
+     * @deprecated Use {@link com.urqa.android.UrQALog#sendException(Exception, String, com.urqa.android.level.ErrorLevel)} instead.
      */
     public static void SendException(Exception e, String Tag, ErrorRank rank) {
         UrQALog.sendException(e, Tag, ErrorLevel.valueOf(rank));
@@ -70,10 +70,10 @@ public final class URQAController {
 
 
     /**
-     * @deprecated Use {@link com.urqa.android.UrQA#setLogCat(boolean)} instead.
+     * @deprecated Use {@link com.urqa.android.UrQA#setSendLog(boolean)} instead.
      */
     public static void SetLogCat(boolean toggleLog) {
-        UrQA.setLogCat(toggleLog);
+        UrQA.setSendLog(toggleLog);
     }
 
     /**
@@ -160,5 +160,16 @@ public final class URQAController {
      */
     public static int e(String tag, String Msg) {
         return UrQALog.v(tag, Msg);
+    }
+
+
+    /**
+     * use Android NDK
+     *
+     * @return android cache path
+     * @deprecated Use {@link com.urqa.android.UrQA#getCacheDirPath()} instead.
+     */
+    public static String GetCachePath() {
+        return UrQA.getCacheDirPath();
     }
 }

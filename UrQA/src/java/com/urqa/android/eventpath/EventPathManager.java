@@ -1,7 +1,7 @@
 package com.urqa.android.eventpath;
 
 import com.urqa.android.collector.DateCollector;
-import com.urqa.android.common.EventPath;
+import com.urqa.android.common.EventPathReport;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -15,11 +15,11 @@ import java.util.List;
 public class EventPathManager {
 
     private static volatile EventPathManager sInstance;
-    private List<EventPath> mEventPaths = new ArrayList<EventPath>();
+    private List<EventPathReport> mEventPathReports = new ArrayList<EventPathReport>();
 
     private static final int MAX_EVENT_PATH = 10;
 
-    private EventPath mErrorEventPaths[] = new EventPath[MAX_EVENT_PATH];
+    private EventPathReport mErrorEventPathReports[] = new EventPathReport[MAX_EVENT_PATH];
     private int mEventCount = 0;
 
 
@@ -36,57 +36,57 @@ public class EventPathManager {
     public synchronized void create(int step, String label) {
         List<StackTraceElement> stackTrace = Arrays.asList(new Exception().getStackTrace());
 
-        EventPath.Builder builder = new EventPath.Builder(stackTrace.get(step));
+        EventPathReport.Builder builder = new EventPathReport.Builder(stackTrace.get(step));
         builder.setDateTime(DateCollector.getDate());
         builder.setLabel(label);
 
 
-        EventPath eventPath = builder.build();
+        EventPathReport eventPathReport = builder.build();
 
         shiftErrorEventPath();
-        mErrorEventPaths[MAX_EVENT_PATH - 1] = eventPath;
+        mErrorEventPathReports[MAX_EVENT_PATH - 1] = eventPathReport;
         mEventCount++;
-        mEventPaths.add(eventPath);
+        mEventPathReports.add(eventPathReport);
     }
 
     private void shiftErrorEventPath() {
-        System.arraycopy(mErrorEventPaths, 1, mErrorEventPaths, 0, MAX_EVENT_PATH - 1);
+        System.arraycopy(mErrorEventPathReports, 1, mErrorEventPathReports, 0, MAX_EVENT_PATH - 1);
     }
 
-    public List<EventPath> getEventPath() {
-        return mEventPaths;
+    public List<EventPathReport> getEventPath() {
+        return mEventPathReports;
     }
 
     public int getEventCount() {
         return mEventCount;
     }
 
-    public List<EventPath> getErrorEventPath() {
-        List<EventPath> eventPaths = new ArrayList<EventPath>();
+    public List<EventPathReport> getErrorEventPath() {
+        List<EventPathReport> eventPathReports = new ArrayList<EventPathReport>();
 
         int maxCount = mEventCount;
         if (maxCount >= MAX_EVENT_PATH)
             maxCount = MAX_EVENT_PATH;
 
-        eventPaths.addAll(Arrays.asList(mErrorEventPaths).subList(MAX_EVENT_PATH - maxCount, MAX_EVENT_PATH));
+        eventPathReports.addAll(Arrays.asList(mErrorEventPathReports).subList(MAX_EVENT_PATH - maxCount, MAX_EVENT_PATH));
 
-        return eventPaths;
+        return eventPathReports;
     }
 
     public void clear() {
         getInstance().getEventPath().clear();
     }
 
-    public static List<EventPath> getNumberofEventPath(int number) {
+    public static List<EventPathReport> getNumberofEventPath(int number) {
         final int size = getInstance().getEventPath().size();
         final int start = (size - number) < 0 ? 0 : (size - number);
 
-        List<EventPath> eventPaths = new ArrayList<EventPath>();
+        List<EventPathReport> eventPathReports = new ArrayList<EventPathReport>();
         for (int i = start; i < size; i++) {
-            eventPaths.add(getInstance().getEventPath().get(i));
+            eventPathReports.add(getInstance().getEventPath().get(i));
         }
 
-        return eventPaths;
+        return eventPathReports;
     }
 
 }

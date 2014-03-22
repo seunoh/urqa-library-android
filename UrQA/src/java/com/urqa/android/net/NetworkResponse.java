@@ -16,9 +16,7 @@
 
 package com.urqa.android.net;
 
-import org.apache.http.HttpStatus;
-
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -26,30 +24,75 @@ import java.util.Map;
 public class NetworkResponse {
 
 
-    /** The HTTP status code. */
+    /**
+     * The HTTP status code.
+     */
     public final int statusCode;
 
-    /** Raw data from this response. */
+    /**
+     * Raw data from this response.
+     */
     public final byte[] data;
 
-    /** Response headers. */
+    /**
+     * Response headers.
+     */
     public final Map<String, String> headers;
 
-    /** True if the server returned a 304 (Not Modified). */
+    /**
+     * True if the server returned a 304 (Not Modified).
+     */
     public final boolean notModified;
 
     /**
      * Creates a new network response.
-     * @param statusCode the HTTP status code
-     * @param data Response body
-     * @param headers Headers returned with this response, or null for none
+     *
+     * @param statusCode  the HTTP status code
+     * @param data        Response body
+     * @param headers     Headers returned with this response, or null for none
      * @param notModified True if the server returned a 304 and the data was already in cache
      */
     public NetworkResponse(int statusCode, byte[] data, Map<String, String> headers,
-            boolean notModified) {
+                           boolean notModified) {
         this.statusCode = statusCode;
         this.data = data;
         this.headers = headers;
         this.notModified = notModified;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NetworkResponse that = (NetworkResponse) o;
+
+        if (notModified != that.notModified) return false;
+        if (statusCode != that.statusCode) return false;
+        if (!Arrays.equals(data, that.data)) return false;
+        if (headers != null ? !headers.equals(that.headers) : that.headers != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = statusCode;
+        result = 31 * result + (data != null ? Arrays.hashCode(data) : 0);
+        result = 31 * result + (headers != null ? headers.hashCode() : 0);
+        result = 31 * result + (notModified ? 1 : 0);
+        return result;
+    }
+
+
+    @Override
+    public String toString() {
+        return "NetworkResponse{" +
+                "statusCode=" + statusCode +
+                ", data=" + Arrays.toString(data) +
+                ", headers=" + headers +
+                ", notModified=" + notModified +
+                '}';
     }
 }

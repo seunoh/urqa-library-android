@@ -5,7 +5,7 @@ import android.os.Handler;
 import java.util.concurrent.Executor;
 
 /**
- * Created by seunoh on 2014. 1. 26..
+ * @author seunoh on 2014. 1. 26..
  */
 public class ResponseExecutor {
 
@@ -51,6 +51,9 @@ public class ResponseExecutor {
             } else {
                 mRequest.fail(mResponse.exception);
             }
+
+
+            mRequest.finish();
         }
     }
 }

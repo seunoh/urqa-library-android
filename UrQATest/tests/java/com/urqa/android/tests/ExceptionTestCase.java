@@ -1,12 +1,10 @@
 package com.urqa.android.tests;
 
-import android.test.AndroidTestCase;
-
 import com.urqa.android.UrQA;
 import com.urqa.android.UrQAHelper;
 import com.urqa.android.UrQALog;
-import com.urqa.android.common.Auth;
-import com.urqa.android.rank.ErrorLevel;
+import com.urqa.android.common.AuthReport;
+import com.urqa.android.level.ErrorLevel;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -25,11 +23,11 @@ public class ExceptionTestCase extends UrQATestCase {
         super.setUp();
         mLatch = new CountDownLatch(1);
 
-        Auth auth = new Auth();
-        auth.setApiKey("59BB0235");
-        auth.setAppVersion("1.0");
+        AuthReport authReport = new AuthReport();
+        authReport.setApiKey("59BB0235");
+        authReport.setAppVersion("1.0");
 
-        UrQAHelper.getInstance().put("idsession", "1393499332666");
+        UrQAHelper.getInstance().put(UrQAHelper.Keys.API_KEY, "1393499332666");
     }
 
 
@@ -38,7 +36,7 @@ public class ExceptionTestCase extends UrQATestCase {
         UrQALog.e(UrQA.TAG, "testException");
 
 
-        UrQALog.sendException(getActivity(), new Exception(), "Test1", ErrorLevel.CRITICAL);
+        UrQALog.sendException(new Exception(), "Test1", ErrorLevel.CRITICAL);
 
         mLatch.await(5, TimeUnit.SECONDS);
 

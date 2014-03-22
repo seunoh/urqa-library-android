@@ -1,7 +1,9 @@
 package com.urqa.android.collector;
 
+import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.os.StatFs;
 
@@ -12,69 +14,58 @@ import java.io.File;
  */
 public final class MemoryManager extends AbstractManager {
 
+    private MemorySize mInternalMemorySize;
+
     public MemoryManager(Context context) {
         super(context);
+        mInternalMemorySize = new MemorySize(Environment.getDataDirectory());
     }
 
-    public boolean externalMemoryAvailable() {
-        return Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED);
+    public boolean isAvailableExternalStorage() {
+        return Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState());
     }
 
     public long getAvailableInternalMemorySize() {
-        File path = Environment.getDataDirectory();
-        StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long availableBlocks = stat.getAvailableBlocks();
-        return availableBlocks * blockSize;
+        return mInternalMemorySize.getAvailableMemorySize();
     }
 
     public long getTotalInternalMemorySize() {
-        File path = Environment.getDataDirectory();
-        StatFs stat = new StatFs(path.getPath());
-        long blockSize = stat.getBlockSize();
-        long totalBlocks = stat.getBlockCount();
-        return totalBlocks * blockSize;
+        return mInternalMemorySize.getTotalMemorySize();
     }
 
 
-    public int getAvailableExternalMemorySizeMegaByte() {
-        return byteToMegaByte(getAvailableExternalMemorySize());
+    public long getAvailableExternalMemorySizeMegaByte() {
+        return toMegaByte(getAvailableExternalMemorySize());
     }
 
     public long getAvailableExternalMemorySize() {
-        if (externalMemoryAvailable()) {
-            File path = Environment.getExternalStorageDirectory();
-            StatFs stat = new StatFs(path.getPath());
-            long blockSize = stat.getBlockSize();
-            long availableBlocks = stat.getAvailableBlocks();
-            return availableBlocks * blockSize;
+        if (isAvailableExternalStorage()) {
+            MemorySize memorySize = new MemorySize(Environment.getExternalStorageDirectory());
+            return memorySize.getAvailableMemorySize();
         } else {
             return ERROR;
         }
     }
 
     public long getTotalExternalMemorySize() {
-        if (externalMemoryAvailable()) {
-            File path = Environment.getExternalStorageDirectory();
-            StatFs stat = new StatFs(path.getPath());
-            long blockSize = stat.getBlockSize();
-            long totalBlocks = stat.getBlockCount();
-            return totalBlocks * blockSize;
+        if (isAvailableExternalStorage()) {
+            MemorySize memorySize = new MemorySize(Environment.getExternalStorageDirectory());
+            return memorySize.getTotalMemorySize();
         } else {
             return ERROR;
         }
     }
 
-    public int getTotalMemoryMegaByte() {
-        return byteToMegaByte(getTotalMemory());
+    public long getTotalMemoryMegaByte() {
+        return toMegaByte(getTotalMemory());
     }
 
     public long getTotalMemory() {
         return Runtime.getRuntime().totalMemory();
     }
 
-    public int getFreeMemoryMegaByte() {
-        return byteToMegaByte(getFreeMemory());
+    public long getFreeMemoryMegaByte() {
+        return toMegaByte(getFreeMemory());
     }
 
     public long getFreeMemory() {
@@ -82,8 +73,8 @@ public final class MemoryManager extends AbstractManager {
     }
 
 
-    public int getMaxMemoryMegaByte() {
-        return byteToMegaByte(getMaxMemory());
+    public long getMaxMemoryMegaByte() {
+        return toMegaByte(getMaxMemory());
     }
 
     public long getMaxMemory() {
@@ -95,7 +86,53 @@ public final class MemoryManager extends AbstractManager {
         return memoryInfo.lowMemory;
     }
 
-    private int byteToMegaByte(long byteValue) {
-        return (int) ((byteValue / 1024) / 1024);
+    private Long toMegaByte(long byteValue) {
+        return (byteValue / 1024) / 1024;
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    private class MemorySize {
+        private StatFs mFs;
+
+        private MemorySize(StatFs fs) {
+            mFs = fs;
+        }
+
+        private MemorySize(File path) {
+            this(new StatFs(path.getPath()));
+        }
+
+
+        private Long getBlockSize() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                return mFs.getBlockSizeLong();
+            else
+                return (long) mFs.getBlockSize();
+        }
+
+
+        private Long getAvailableBlocks() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                return mFs.getAvailableBlocksLong();
+            else
+                return (long) mFs.getAvailableBlocks();
+        }
+
+        private Long getBlockCount() {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+                return mFs.getBlockCountLong();
+            else
+                return (long) mFs.getBlockCount();
+        }
+
+
+        private Long getAvailableMemorySize() {
+            return getAvailableBlocks() * getBlockSize();
+        }
+
+        private Long getTotalMemorySize() {
+            return getBlockSize() * getBlockCount();
+        }
     }
 }

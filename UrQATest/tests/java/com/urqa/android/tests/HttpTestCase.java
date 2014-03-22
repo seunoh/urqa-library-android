@@ -1,16 +1,7 @@
 package com.urqa.android.tests;
 
-import android.util.Log;
-
 import com.urqa.android.UrQA;
-import com.urqa.android.UrQAHelper;
-import com.urqa.android.common.Auth;
-import com.urqa.android.net.HttpRunnable;
-import com.urqa.android.net.Request;
-import com.urqa.android.net.Response;
-import com.urqa.android.net.UrQAUrlFactory;
-
-import org.json.JSONObject;
+import com.urqa.android.common.AuthReport;
 
 import java.util.concurrent.CountDownLatch;
 
@@ -30,33 +21,9 @@ public class HttpTestCase extends UrQATestCase {
 
     public void testNetworkThread() throws Exception {
 
-
-        Request request = new Request(Request.Method.POST, UrQAUrlFactory.create(UrQAUrlFactory.Url.CONNECT), new Response.ResponseListener() {
-            @Override
-            public void response(JSONObject jsonObject) {
-
-                //UrQAHelper.getInstance().put("idsession", jsonObject.optString("idsession"));
-
-                Log.e(HttpTestCase.class.getName(), jsonObject.toString());
-                assertNotNull(jsonObject.toString());
-                assertEquals("".equals(jsonObject.toString()), false);
-                mLatch.countDown();
-            }
-
-            @Override
-            public void errorResponse(Exception e) {
-                assertNotNull(e);
-                mLatch.countDown();
-            }
-        });
-
-        Auth auth = new Auth();
-        auth.setApiKey("59BB0235");
-        auth.setAppVersion("1.0");
-
-//        request.addParams(MapHelper.toMap(auth));
-        HttpRunnable.start(request);
-
+        AuthReport authReport = new AuthReport();
+        authReport.setApiKey("59BB0235");
+        authReport.setAppVersion("1.0");
 
         mLatch.await();
 

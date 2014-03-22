@@ -4,23 +4,24 @@ import android.content.Context;
 import android.util.Log;
 
 import com.urqa.android.collector.AppManager;
-import com.urqa.android.common.Auth;
-import com.urqa.android.common.ExceptionHandler;
+import com.urqa.android.common.AuthReport;
+import com.urqa.android.common.ToJson;
 import com.urqa.android.eventpath.EventPathManager;
-import com.urqa.android.net.ErrorNativeRequest;
-import com.urqa.android.net.HttpRunnable;
+import com.urqa.android.net.AuthRequest;
 import com.urqa.android.net.Request;
+import com.urqa.android.net.ErrorNativeRequest;
+import com.urqa.android.net.RequestExecutor;
 import com.urqa.android.net.Response;
-import com.urqa.android.net.UrQAUrlFactory;
+import com.urqa.android.net.UrlFactory;
 
 import org.json.JSONObject;
 
+import java.io.File;
 import java.security.InvalidKeyException;
 
 /**
  * @author seunoh on 2014. 1. 25..
  */
-
 public final class UrQA {
 
     public static final String TAG = "UrQA-Android";
@@ -34,7 +35,8 @@ public final class UrQA {
 
         if (!UrQAHelper.getInstance().isTwice()) {
             UrQAHelper.init(context);
-            ExceptionHandler.createInstance();
+            UrQAExceptionHandler.createInstance();
+            EventPathManager.getInstance().clear();
             start(context, apiKey);
         } else {
             Log.w(TAG, new IllegalAccessException("Method is called twice"));
@@ -44,17 +46,17 @@ public final class UrQA {
 
     private synchronized static void start(Context context, String apiKey) {
 
-        final Auth auth = new Auth();
-        auth.setApiKey(apiKey);
-        auth.setAppVersion(new AppManager(context).getAppVersionName());
+        final AuthReport authReport = new AuthReport();
+        authReport.setApiKey(apiKey);
+        authReport.setAppVersion(new AppManager(context).getAppVersionName());
 
-        Request request = new Request(Request.Method.POST, UrQAUrlFactory.create(UrQAUrlFactory.Url.CONNECT), new Response.ResponseListener() {
+        Request request = new Request(Request.Method.POST, UrlFactory.create(UrlFactory.Url.CONNECT), new Response.ResponseListener() {
             @Override
             public void response(JSONObject response) {
-                String session = response.optString("idsession");
+                String session = response.optString(ToJson.Keys.SESSION.getKey());
+                Log.e("APP", session);
                 if (!"".equals(session)) {
-                    Log.e(TAG, auth.toJson().toString());
-                    UrQAHelper.getInstance().put(UrQAHelper.Keys.AUTH, auth.toJson().toString());
+                    UrQAHelper.getInstance().put(UrQAHelper.Keys.AUTH, authReport.toJson().toString());
                     UrQAHelper.getInstance().put(UrQAHelper.Keys.SESSION, session);
                 } else {
                     errorResponse(new InvalidKeyException("apiKey"));
@@ -66,11 +68,17 @@ public final class UrQA {
             public void errorResponse(Exception e) {
                 Log.e(TAG, e.toString());
             }
+
+            @Override
+            public void finish() {
+
+            }
         });
 
-        request.addParams(auth.toJson());
-        HttpRunnable.start(request);
-        EventPathManager.getInstance().clear();
+        request.addParams(authReport.toJson());
+
+        RequestExecutor.execute(request);
+
     }
 
 
@@ -83,9 +91,8 @@ public final class UrQA {
     }
 
     public static void nativeCrashCallback(String str) {
-
         // TODO errorNativeRequest
-        //ErrorReport report = ErrorReportFactory.createNative(UrQAHelper.getInstance().getContext());
+        //ErrorReport report = ReportFactory.createNative(UrQAHelper.getInstance().getContext());
 
         ErrorNativeRequest errorNativeRequest = new ErrorNativeRequest(str);
         errorNativeRequest.start();
@@ -98,18 +105,27 @@ public final class UrQA {
     }
 
 
-    public static void setLogCat(boolean toggleLogCat) {
+    public static void setSendLog(boolean toggleLogCat) {
         UrQAHelper.getInstance().setToggleLogCat(toggleLogCat);
     }
 
-    public static void setLogging(int logLine) {
+    public static void setLogging(int line) {
         UrQAHelper.getInstance().setTransferLog(true);
-        UrQAHelper.getInstance().setLogLine(logLine);
+        UrQAHelper.getInstance().setLogLine(line);
     }
 
-    public static void setLogging(int logLine, String logFilter) {
+    public static void setLogging(int line, String filter) {
         UrQAHelper.getInstance().setTransferLog(true);
-        UrQAHelper.getInstance().setLogLine(logLine);
-        UrQAHelper.getInstance().setLogFilter(logFilter);
+        UrQAHelper.getInstance().setLogLine(line);
+        UrQAHelper.getInstance().setLogFilter(filter);
+    }
+
+    /**
+     * use Android NDK
+     * @return android cache path
+     */
+    public static String getCacheDirPath() {
+        File file = UrQAHelper.getContext().getCacheDir();
+        return file != null ? file.getAbsolutePath() : null;
     }
 }

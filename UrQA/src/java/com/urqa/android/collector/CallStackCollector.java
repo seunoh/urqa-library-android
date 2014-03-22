@@ -2,7 +2,7 @@ package com.urqa.android.collector;
 
 import android.app.Activity;
 
-import com.urqa.android.common.CallStackData;
+import com.urqa.android.common.CallStackReport;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -21,11 +21,11 @@ public final class CallStackCollector {
         return callStackString;
     }
 
-    public static CallStackData parseStackTrace(Throwable throwable) {
+    public static CallStackReport parseStackTrace(Throwable throwable) {
         return parseStackTrace(throwable, getCallStack(throwable));
     }
 
-    public static CallStackData parseStackTrace(Throwable errorThrow, String callStack) {
+    public static CallStackReport parseStackTrace(Throwable errorThrow, String callStack) {
         Throwable recordThrowable;
         if (errorThrow.getCause() != null) {
             recordThrowable = errorThrow.getCause();
@@ -33,7 +33,7 @@ public final class CallStackCollector {
             recordThrowable = errorThrow;
         }
 
-        CallStackData data = new CallStackData();
+        CallStackReport data = new CallStackReport();
         String[] errorName = callStack.split("\n");
         data.setErrorName(errorName[0]);
 

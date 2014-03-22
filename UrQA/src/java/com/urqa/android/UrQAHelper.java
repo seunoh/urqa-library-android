@@ -1,10 +1,7 @@
 package com.urqa.android;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 
-import java.net.SocketException;
 import java.util.HashMap;
 
 /**
@@ -42,23 +39,12 @@ public final class UrQAHelper extends HashMap<UrQAHelper.Keys, String> {
     public static Context getContext() {
         if (sContext == null)
             throw new IllegalArgumentException("called method UrQA.newSession()");
-
-        return sContext;
+        else
+            return sContext;
     }
 
     public boolean isTwice() {
         return mTwice;
-    }
-
-    private boolean checkPermission(Context context) {
-        final int res = context.checkCallingOrSelfPermission(Manifest.permission.INTERNET);
-
-        if (res != PackageManager.PERMISSION_GRANTED) {
-            UrQALog.w(UrQA.TAG, "", new SocketException("Permission denied (maybe missing INTERNET permission)"));
-            return false;
-        } else {
-            return true;
-        }
     }
 
     public boolean isToggleLogCat() {
@@ -97,7 +83,7 @@ public final class UrQAHelper extends HashMap<UrQAHelper.Keys, String> {
         return "UrQA-Android";
     }
 
-    public final String getUrQAVersion() {
+    public final String getVersion() {
         return "0.92";
     }
 

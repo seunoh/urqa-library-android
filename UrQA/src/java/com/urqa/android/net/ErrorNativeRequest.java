@@ -32,10 +32,9 @@ public class ErrorNativeRequest extends Thread {
     public void run() {
         UrQAHelper helper = UrQAHelper.getInstance();
 
-
         try {
             HttpClient client = new DefaultHttpClient();
-            String nativeUrl = UrQAUrlFactory.create(UrQAUrlFactory.Url.NATIVE);
+            String nativeUrl = UrlFactory.create(UrlFactory.Url.NATIVE);
             HttpPost post = new HttpPost(nativeUrl);
 
             post.setHeader("Content-Type", "application/json; charset=utf-8");
@@ -69,7 +68,7 @@ public class ErrorNativeRequest extends Thread {
             try {
                 HttpClient logClient = new DefaultHttpClient();
 
-                HttpPost logPost = new HttpPost(UrQAUrlFactory.create(UrQAUrlFactory.Url.LOG, ""));
+                HttpPost logPost = new HttpPost(UrlFactory.create(UrlFactory.Url.LOG, ""));
 
                 logClient.getParams().setParameter(
                         "http.protocol.expect-continue", false);
@@ -79,7 +78,7 @@ public class ErrorNativeRequest extends Thread {
 
                 // 1. 파일의 내용을 body 로 설정함
                 logPost.setHeader("Content-Type", "text/plain; charset=utf-8");
-                StringEntity entity = new StringEntity(LogCollector.getLog(UrQAHelper.getContext()), "UTF-8");
+                StringEntity entity = new StringEntity(LogCollector.getLog(), "UTF-8");
                 logPost.setEntity(entity);
 
                 logClient.execute(logPost);
@@ -95,7 +94,7 @@ public class ErrorNativeRequest extends Thread {
         try {
             HttpClient dumpClient = new DefaultHttpClient();
 
-            HttpPost dumpPost = new HttpPost(UrQAUrlFactory.create(UrQAUrlFactory.Url.DUMP, "instance"));
+            HttpPost dumpPost = new HttpPost(UrlFactory.create(UrlFactory.Url.DUMP, "instance"));
 
             dumpClient.getParams().setParameter(
                     "http.protocol.expect-continue", false);

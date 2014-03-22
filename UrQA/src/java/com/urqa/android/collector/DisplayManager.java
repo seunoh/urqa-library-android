@@ -47,6 +47,7 @@ public final class DisplayManager extends AbstractManager {
      */
     public int getOrientation() {
         Display display = ((WindowManager) this.getContext().getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
             return display.getRotation();
         else

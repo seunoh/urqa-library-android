@@ -1,11 +1,10 @@
 package com.urqa.android.net;
 
-import com.urqa.android.common.AndroidData;
-import com.urqa.android.common.AppData;
-import com.urqa.android.common.CallStackData;
-import com.urqa.android.common.DisplayData;
-import com.urqa.android.common.MemoryData;
-import com.urqa.android.report.ErrorReportFactory;
+import com.urqa.android.common.AndroidReport;
+import com.urqa.android.common.ApplicationReport;
+import com.urqa.android.common.CallStackReport;
+import com.urqa.android.common.DisplayReport;
+import com.urqa.android.common.MemoryReport;
 
 import org.json.JSONException;
 
@@ -18,18 +17,18 @@ import java.util.Map;
 public class ErrorRequest extends Request {
 
     public ErrorRequest(Response.ResponseListener listener) {
-        super(Method.POST, UrQAUrlFactory.create(UrQAUrlFactory.Url.EXCEPTION), listener);
+        super(Method.POST, UrlFactory.create(UrlFactory.Url.EXCEPTION), listener);
     }
 
     @Override
     public Map<String, String> getHeaders() {
         Map<String, String> map = new HashMap<String, String>();
-        map.put("Context-Type", "application/json; charset=utf-8");
+        map.put("Context-Type", PROTOCOL_CONTENT_TYPE_JSON);
         return map;
     }
 
 
-    public void setAndroidData(AndroidData data) {
+    public void setReport(ApplicationReport data) {
         try {
             addParams(data.toJson());
         } catch (JSONException e) {
@@ -37,7 +36,7 @@ public class ErrorRequest extends Request {
         }
     }
 
-    public void setAppData(AppData data) {
+    public void setReport(AndroidReport data) {
         try {
             addParams(data.toJson());
         } catch (JSONException e) {
@@ -45,7 +44,7 @@ public class ErrorRequest extends Request {
         }
     }
 
-    public void setCallStackData(CallStackData data) {
+    public void setReport(CallStackReport data) {
         try {
             addParams(data.toJson());
         } catch (JSONException e) {
@@ -53,7 +52,7 @@ public class ErrorRequest extends Request {
         }
     }
 
-    public void setDisplayData(DisplayData data) {
+    public void setReport(DisplayReport data) {
         try {
             addParams(data.toJson());
         } catch (JSONException e) {
@@ -61,7 +60,7 @@ public class ErrorRequest extends Request {
         }
     }
 
-    public void setMemoryData(MemoryData data) {
+    public void setReport(MemoryReport data) {
         try {
             addParams(data.toJson());
         } catch (JSONException e) {

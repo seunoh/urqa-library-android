@@ -22,13 +22,16 @@ public class Request {
     /**
      * Charset for request.
      */
-    private static final String PROTOCOL_CHARSET = "utf-8";
+    protected static final String PROTOCOL_CHARSET = "utf-8";
 
     /**
      * Content type for request.
      */
-    private static final String PROTOCOL_CONTENT_TYPE =
+    protected static final String PROTOCOL_CONTENT_TYPE_JSON =
             String.format("application/json; charset=%s", PROTOCOL_CHARSET);
+
+    protected static final String PROTOCOL_CONTENT_TYPE_TEXT =
+            String.format("text/plain; charset=%s", PROTOCOL_CHARSET);
 
 
     private static final int TIMEOUT_MS = 5000;
@@ -104,6 +107,10 @@ public class Request {
             mListener.errorResponse(e);
     }
 
+    public void finish() {
+        if (mListener != null)
+            mListener.finish();
+    }
     public Map<String, String> getHeaders() {
         return mHeader;
     }
@@ -117,7 +124,7 @@ public class Request {
     }
 
     public String getBodyContentType() {
-        return PROTOCOL_CONTENT_TYPE;
+        return PROTOCOL_CONTENT_TYPE_JSON;
     }
 
     /**

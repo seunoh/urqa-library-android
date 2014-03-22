@@ -43,5 +43,7 @@ public class Response {
 
         public void errorResponse(Exception e);
 
+        public void finish();
+
     }
 }

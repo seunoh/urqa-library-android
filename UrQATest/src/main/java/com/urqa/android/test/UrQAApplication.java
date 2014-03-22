@@ -23,6 +23,6 @@ public class UrQAApplication extends Application {
         super.onCreate();
 
 
-        UrQA.newSession(getApplicationContext(), "59BB0235");
+        UrQA.newSession(getApplicationContext(), "667285E8");
     }
 }

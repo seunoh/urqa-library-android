@@ -2,24 +2,24 @@ apply plugin: 'android-library'
 
 android {
     compileSdkVersion 19
-    buildToolsVersion '19.0.1'
+    buildToolsVersion '19.0.3'
 
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 19
-        versionCode 1
-        versionName '1.0'
     }
 
     sourceSets {
-        main {
-            manifest.srcFile 'src/AndroidManifest.xml'
-            java.srcDirs = ['src/java']
-            res.srcDirs = ['src/res']
-            assets.srcDirs = ['src/assets']
-            jniLibs.srcDirs = ['jniDir']
+        main.manifest.srcFile 'src/AndroidManifest.xml'
+        main.java.srcDirs = ['src/java']
+        main.res.srcDirs = ['src/res']
+        main.assets.srcDirs = ['src/assets']
+        main.jni.srcDirs = ['src/jni']
 
-
+        asndroidTest {
+            java.srcDirs = ['tests/java']
+            res.srcDirs = ['tests/res']
+            assets.srcDirs = ['tests/assets']
         }
     }
 }

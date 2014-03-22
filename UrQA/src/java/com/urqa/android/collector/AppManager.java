@@ -9,8 +9,13 @@ import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
+
+import com.urqa.android.UrQA;
+import com.urqa.android.UrQAHelper;
 
 import java.io.File;
+import java.net.SocketException;
 import java.util.Locale;
 
 /**
@@ -83,7 +88,7 @@ public final class AppManager extends AbstractManager {
     /**
      * 나라 코드를 가져온다.
      *
-     * @return 나라코드가 제대로 안될시 Unknown반환 아니면 kr 같은 나라코드 반환
+     * @return 나라코드가 제대로 안될시 Unknown 반환 아니면 kr 같은 나라코드 반환
      */
     public String getCountry() {
         final String country = Locale.getDefault().getCountry();
@@ -99,7 +104,7 @@ public final class AppManager extends AbstractManager {
      *
      * @return true 사용중 false 면 비사용
      */
-    public boolean getGps() {
+    public boolean isGps() {
         if (checkLocation()) {
             LocationManager locationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
             return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -112,7 +117,18 @@ public final class AppManager extends AbstractManager {
         return checkPermission(Manifest.permission.ACCESS_FINE_LOCATION);
     }
 
-    public boolean checkRoot() {
+    public boolean isInternetPermission() {
+        final boolean b = checkPermission(Manifest.permission.INTERNET);
+
+        if (!b) {
+            Log.w(UrQA.TAG, "", new SocketException("Permission denied (maybe missing INTERNET permission)"));
+        }
+
+        return b;
+    }
+
+
+    public boolean isSuperUser() {
         final String rootPaths[] = {
                 "/sbin/",
                 "/system/bin/",
