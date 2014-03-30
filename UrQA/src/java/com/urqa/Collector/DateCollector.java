@@ -7,7 +7,9 @@ import java.util.Date;
 import java.util.TimeZone;
 
 import android.content.Context;
-
+/**
+ * @deprecated Use {@link com.urqa.library.collector.DateCollector} instead.
+ */
 public class DateCollector {
 	
 	public static String GetDateYYMMDDHHMMSS(Context context){

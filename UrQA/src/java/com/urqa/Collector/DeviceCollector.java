@@ -22,7 +22,11 @@ import android.view.WindowManager;
 
 
 
-
+/**
+ * @deprecated Use {@link com.urqa.library.collector.AppManager},
+ * {@link com.urqa.library.collector.DisplayManager},
+ * {@link com.urqa.library.collector.MemoryManager} instead.
+ */
 public class DeviceCollector {
 
 	Context m_Context;
