@@ -22,15 +22,6 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TelephonyManager tm = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-        String countryCode = tm.getSimCountryIso();
-        String countryCode1 = tm.getNetworkCountryIso();
-
-
-        Log.e("APP", "countryCode" + countryCode);
-        Log.e("APP", "countryCode" + countryCode1);
-
-
         findViewById(R.id.button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
