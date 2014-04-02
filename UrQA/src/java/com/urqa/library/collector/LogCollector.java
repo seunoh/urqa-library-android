@@ -32,6 +32,7 @@ public final class LogCollector {
     }
 
     private String listToString(List<String> list) {
+        // TODO UrQA log line setting
         final int end = list.size();
         final int line = 10;//UrQAHelper.getInstance().getLogLine();
         final int start = (end - line) < 0 ? 0 : (end - line);
@@ -50,7 +51,7 @@ public final class LogCollector {
 
         String line;
         while ((line = reader.readLine()) != null) {
-            list.add(line + "\n");
+            list.add(line);
         }
         is.close();
         return list;
